@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import fs from "fs";
+import path from "path";
 import dotenv from "dotenv";
 import uploadRoutes from "./routes/uploadRoutes";
 
@@ -10,6 +12,12 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+const uploadDir = path.join(process.cwd(), "uploads");
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // Routes
 app.use("/upload", uploadRoutes);

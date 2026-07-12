@@ -62,22 +62,23 @@ export default function UploadForm() {
         },
       );
 
-      const data = await response.json();
+      const text = await response.text();
+
+      console.log("Status:", response.status);
+      console.log("Response:", text);
+
+      if (!response.ok) {
+        throw new Error(text);
+      }
+
+      const data = JSON.parse(text);
 
       console.log("Backend Response:", data);
 
       setResult(data);
-
-      if (!response.ok) {
-        throw new Error(data.message || "Upload failed");
-        throw new Error("CSV upload failed. Please check the backend server.");
-      }
     } catch (error: any) {
       console.error(error);
-      setError(error.message || "Upload failed");
-      setError(
-        "Cannot connect to the backend. Please ensure the backend server is running.",
-      );
+      setError(error.message || "Upload failed. Please try again.");
     } finally {
       setLoading(false);
     }
