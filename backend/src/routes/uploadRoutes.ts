@@ -6,6 +6,8 @@ import { mapCustomers } from "../services/aiService";
 const router = express.Router();
 
 router.post("/", upload.single("file"), async (req, res) => {
+  console.log("✅ Upload request received");
+
   try {
     if (!req.file) {
       return res.status(400).json({
@@ -13,11 +15,18 @@ router.post("/", upload.single("file"), async (req, res) => {
       });
     }
 
+    console.log("✅ File uploaded:", req.file.filename);
+
     // Read CSV
     const data = await readCSV(req.file.path);
 
+    console.log("✅ CSV read successfully");
+
+    console.log("🤖 Calling AI...");
+
     // Send all customers to Gemini
     const mappedCustomers = await mapCustomers(data);
+    console.log("✅ AI response received");
 
     // Convert AI output to CSV
 

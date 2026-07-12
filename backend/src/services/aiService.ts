@@ -1,10 +1,11 @@
-import { GoogleGenAI } from "@google/genai";
+import OpenAI from "openai";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY!,
+const client = new OpenAI({
+  apiKey: process.env.OPENROUTER_API_KEY!,
+  baseURL: "https://openrouter.ai/api/v1",
 });
 
 export async function mapCustomers(customers: any[]) {
@@ -29,42 +30,43 @@ Rules:
 - Map company to "company".
 - Map city to "city".
 - If any value is missing, return null.
-
-Example output:
-
-[
-  {
-    "name": "John Doe",
-    "email": "john@gmail.com",
-    "country_code": "+91",
-    "mobile_without_country_code": "9876543210",
-    "company": "ABC Pvt Ltd",
-    "city": "Hyderabad"
-  }
-]
 `;
 
-  console.log("Using model:", "gemini-2.5-pro");
-  console.log("Customers received:", customers.length);
+  console.log(
+    "Using OpenRouter Key:",
+    process.env.OPENROUTER_API_KEY?.substring(0, 15),
+  );
+
+  console.log("Calling OpenRouter...");
+  let response;
 
   try {
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-pro",
-      contents: prompt,
+    response = await client.chat.completions.create({
+      model: "openrouter/free",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
     });
+  } catch (err: any) {
+    console.error("OpenRouter Error:");
+    console.error(err);
 
-    const text = response.text ?? "";
+    if (err.response?.data) {
+      console.error(err.response.data);
+    }
 
-    console.log("Gemini Response:", text);
-
-    const cleaned = text
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .trim();
-
-    return JSON.parse(cleaned);
-  } catch (error) {
-    console.error("Gemini Error:", error);
-    throw error;
+    throw err;
   }
+
+  const text = response.choices[0].message.content ?? "";
+
+  const cleaned = text
+    .replace(/```json/g, "")
+    .replace(/```/g, "")
+    .trim();
+
+  return JSON.parse(cleaned);
 }
