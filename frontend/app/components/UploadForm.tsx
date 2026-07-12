@@ -54,10 +54,13 @@ export default function UploadForm() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://groweasy-ai-importer-2-szjo.onrender.com/upload",
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
 
       const data = await response.json();
 
