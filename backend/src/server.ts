@@ -10,14 +10,7 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      "https://groweasy-ai-importer-fvwa-eawwhepcj-grow-update.vercel.app",
-    ],
-  }),
-);
+app.use(cors());
 app.use(express.json());
 
 const uploadDir = path.join(process.cwd(), "uploads");
