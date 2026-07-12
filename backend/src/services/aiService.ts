@@ -44,22 +44,27 @@ Example output:
 ]
 `;
 
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-pro",
-    contents: prompt,
-  });
-
-  const text = response.text ?? "";
-
-  const cleaned = text
-    .replace(/```json/g, "")
-    .replace(/```/g, "")
-    .trim();
+  console.log("Using model:", "gemini-2.5-pro");
+  console.log("Customers received:", customers.length);
 
   try {
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-pro",
+      contents: prompt,
+    });
+
+    const text = response.text ?? "";
+
+    console.log("Gemini Response:", text);
+
+    const cleaned = text
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+
     return JSON.parse(cleaned);
   } catch (error) {
-    console.error("JSON Parse Error:", cleaned);
-    throw new Error("Gemini returned invalid JSON");
+    console.error("Gemini Error:", error);
+    throw error;
   }
 }
