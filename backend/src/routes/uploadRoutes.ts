@@ -1,4 +1,6 @@
 import express from "express";
+import fs from "fs";
+import path from "path";
 import upload from "../middleware/upload";
 import { readCSV } from "../services/csvService";
 import { mapCustomers } from "../services/aiService";
@@ -26,6 +28,22 @@ router.post("/", upload.single("file"), async (req, res) => {
 
     // Send all customers to Gemini
     const mappedCustomers = await mapCustomers(data);
+    const historyPath = path.join(process.cwd(), "history.json");
+
+    // Read existing history
+    const history = JSON.parse(fs.readFileSync(historyPath, "utf8"));
+
+    // Add new record
+    history.unshift({
+      filename: req.file.originalname,
+      uploadedAt: new Date().toISOString(),
+      totalRows: data.length,
+      processedRows: mappedCustomers.length,
+      status: "Success",
+    });
+
+    // Save updated history
+    fs.writeFileSync(historyPath, JSON.stringify(history, null, 2));
     console.log("✅ AI response received");
 
     // Convert AI output to CSV
