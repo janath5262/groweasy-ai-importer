@@ -341,14 +341,24 @@ ${
                             index % 2 === 0 ? "bg-white" : "bg-gray-50"
                           } hover:bg-gray-100`}
                         >
-                          <td className="p-4">{customer.name}</td>
-                          <td className="p-4">{customer.email}</td>
-                          <td className="p-4">{customer.country_code}</td>
-                          <td className="p-4">
+                          <td className="p-4 text-gray-800 font-medium">
+                            {customer.name}
+                          </td>
+                          <td className="p-4 text-gray-800 font-medium">
+                            {customer.email}
+                          </td>
+                          <td className="p-4 text-gray-800 font-medium">
+                            {customer.country_code}
+                          </td>
+                          <td className="p-4 text-gray-800 font-medium">
                             {customer.mobile_without_country_code}
                           </td>
-                          <td className="p-4">{customer.company}</td>
-                          <td className="p-4">{customer.city}</td>
+                          <td className="p-4 text-gray-800 font-medium">
+                            {customer.company}
+                          </td>
+                          <td className="p-4 text-gray-800 font-medium">
+                            {customer.city}
+                          </td>
                         </tr>
                       ))
                     ) : (
