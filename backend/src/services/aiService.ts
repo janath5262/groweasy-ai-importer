@@ -62,6 +62,8 @@ Rules:
   }
 
   const text = response.choices[0].message.content ?? "";
+  console.log("AI Response:");
+  console.log(text);
 
   const cleaned = text
     .replace(/```json/g, "")

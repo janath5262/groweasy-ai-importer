@@ -30,6 +30,7 @@ router.post("/", upload.single("file"), async (req, res) => {
     const mappedCustomers = await mapCustomers(data);
     const historyPath = path.join(process.cwd(), "history.json");
 
+    console.log("History Path:", historyPath);
     // Read existing history
     const history = JSON.parse(fs.readFileSync(historyPath, "utf8"));
 
@@ -60,6 +61,20 @@ router.post("/", upload.single("file"), async (req, res) => {
     res.status(500).json({
       message: "Error processing CSV",
       error: error.message,
+    });
+  }
+});
+
+router.get("/history", (req, res) => {
+  try {
+    const historyPath = path.join(process.cwd(), "history.json");
+
+    const history = JSON.parse(fs.readFileSync(historyPath, "utf-8"));
+
+    res.json(history);
+  } catch (err) {
+    res.status(500).json({
+      message: "Unable to load history",
     });
   }
 });
