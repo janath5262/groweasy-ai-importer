@@ -12,7 +12,10 @@ const app = express();
 // Middleware
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://your-vercel-app.vercel.app"],
+    origin: [
+      "http://localhost:3000",
+      "https://groweasy-ai-importer-fvwa-eawwhepcj-grow-update.vercel.app",
+    ],
   }),
 );
 app.use(express.json());
